@@ -1,13 +1,12 @@
-/* @flow */
-import {exec, execSync} from 'child_process';
-import {createHash} from 'crypto';
+const {exec, execSync} = require('child_process');
+const {createHash} = require('crypto');
 
-let {platform}: Object = process,
+let {platform} = process,
     win32RegBinPath = {
         native: '%windir%\\System32',
         mixed: '%windir%\\sysnative\\cmd.exe /c %windir%\\System32'
     },
-    guid: Object = {
+    guid = {
         darwin: 'ioreg -rd1 -c IOPlatformExpertDevice',
         win32: `${win32RegBinPath[isWindowsProcessMixedOrNativeArchitecture()]}\\REG.exe ` +
             'QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography ' +
@@ -16,7 +15,7 @@ let {platform}: Object = process,
         freebsd: 'kenv -q smbios.system.uuid || sysctl -n kern.hostuuid'
     };
 
-function isWindowsProcessMixedOrNativeArchitecture(): string {
+function isWindowsProcessMixedOrNativeArchitecture() {
     // detect if the node binary is the same arch as the Windows OS.
     // or if this is 32 bit node on 64 bit windows.
     if(process.platform !== 'win32') {
@@ -28,11 +27,11 @@ function isWindowsProcessMixedOrNativeArchitecture(): string {
     return 'native';
 }
 
-function hash(guid: string): string {
+function hash(guid) {
     return createHash('sha256').update(guid).digest('hex');
 }
 
-function expose(result: string): string {
+function expose(result) {
     switch (platform) {
         case 'darwin':
             return result
@@ -60,21 +59,26 @@ function expose(result: string): string {
     }
 }
 
-export function machineIdSync(original: boolean): string {
-    let id: string = expose(execSync(guid[platform]).toString());
+function machineIdSync(original) {
+    let id = expose(execSync(guid[platform]).toString());
     return original ? id : hash(id);
 }
 
-export function machineId(original: boolean): Promise<string> {
-    return new Promise((resolve: Function, reject: Function): Object => {
-        return exec(guid[platform], {}, (err: any, stdout: any, stderr: any) => {
+function machineId(original) {
+    return new Promise((resolve, reject) => {
+        return exec(guid[platform], {}, (err, stdout, stderr) => {
             if (err) {
                 return reject(
                     new Error(`Error while obtaining machine id: ${err.stack}`)
                 );
             }
-            let id: string = expose(stdout.toString());
+            let id = expose(stdout.toString());
             return resolve(original ? id : hash(id));
         });
     });
 }
+
+module.exports = {
+  machineId,
+  machineIdSync
+};
