@@ -39,3 +39,11 @@ describe('Sync call: machineIdSync()', function () {
     assert.match(machineIdSync(), hashPattern);
   });
 });
+
+describe('CommonJS imports', function () {
+    it('should return function machineIdSync, machineId', function () {
+        let __module__ = require('../index');
+        assert.isFunction(__module__.machineId);
+        assert.isFunction(__module__.machineIdSync);
+    });
+});

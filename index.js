@@ -85,7 +85,7 @@ function machineIdSync(original) {
     let id = expose(execSync(guid[platform]).toString());
     return original ? id : hash(id);
   } catch (e) {
-    // don't throw the error immediately, try the alternative approach
+    // don't throw the error immediately, try the alternative approach (native-reg in case of win32)
     error = e;
   }
   if (platform === 'win32') {
@@ -116,7 +116,7 @@ function machineId(original) {
         let id = expose(stdout.toString());
         return resolve(original ? id : hash(id));
       } catch (e) {
-        // don't throw the error immediately, try the alternative approach
+        // don't throw the error immediately, try the alternative approach (native-reg in case of win32)
         error = e;
       }
       if (platform === 'win32') {
