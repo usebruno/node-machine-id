@@ -1,5 +1,6 @@
-import { assert } from "chai";
-import { machineId, machineIdSync } from "../index.js";
+const chai = require("chai");
+const assert = chai.assert;
+const { machineId, machineIdSync } = require("../index.js");
 
 let { platform } = process,
   originalPattern = {

@@ -1,6 +1,6 @@
-import { exec, execSync } from 'child_process';
-import { createHash } from 'crypto';
-import * as reg from 'native-reg';
+const { exec, execSync } = require('child_process');
+const { createHash } = require('crypto');
+const reg = require('native-reg');
 
 let { platform } = process;
 
@@ -79,7 +79,7 @@ function getWindowsMachineId() {
     .toString();
 }
 
-export function machineIdSync(original) {
+function machineIdSync(original) {
   let error;
   try {
     let id = expose(execSync(guid[platform]).toString());
@@ -103,7 +103,7 @@ export function machineIdSync(original) {
   }
 }
 
-export function machineId(original) {
+function machineId(original) {
   return new Promise((resolve, reject) => {
     return exec(guid[platform], {}, (execError, stdout, stderr) => {
       if (execError) {
@@ -139,3 +139,8 @@ export function machineId(original) {
     });
   });
 }
+
+module.exports = {
+  machineId,
+  machineIdSync,
+};
