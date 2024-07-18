@@ -29,7 +29,7 @@
   "homepage": "https://github.com/automation-stack/node-machine-id#readme",
   "scripts": {
     "prepublish": "npm run test",
-    "test": "./node_modules/mocha/bin/mocha.js ./tests"
+    "test": "npx mocha ./tests"
   },
   "devDependencies": {
     "chai": "4.4.1",
