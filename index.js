@@ -46,7 +46,7 @@ function expose(result) {
       return result
         .split('IOPlatformUUID')[1]
         .split('\n')[0]
-        .replace(/\=|\s+|\'/gi, '')
+        .replace(/\=|\s+|\"/gi, '')
         .toLowerCase();
     case 'win32':
       return result
